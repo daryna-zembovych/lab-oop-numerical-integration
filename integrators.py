@@ -29,11 +29,7 @@ class BaseIntegrator:
 
     def adaptive_integrate(self, eps=1e-4, initial_n=2):
         """Знаходить інтеграл із заданою точністю eps за правилом Рунге."""
-        if initial_n >= 2 and initial_n % 2 == 0:
-            n = initial_n
-        else:
-            n = 2
-
+        n = initial_n
         i_h = self.integrate(n)
 
         while True:
@@ -41,7 +37,9 @@ class BaseIntegrator:
             i_h2 = self.integrate(n_2)
             delta = abs(i_h2 - i_h) / (2 ** self.order - 1)
 
-            if delta <= eps:
+            if delta == 0:
+                return i_h, n, delta
+            elif delta <= eps:
                 i_refined = i_h2 + (i_h2 - i_h) / (2 ** self.order - 1)
                 return i_refined, n_2, delta
 
@@ -51,7 +49,7 @@ class BaseIntegrator:
 
     def __str__(self):
         """Повертає рядкове представлення об'єкта інтегратора."""
-        return (f'{self.method_name} (порядок О(h^{self.order})) на відрізку [{self.a}; {self.b}]')
+        return (f'{self.method_name} на відрізку [{self.a}; {self.b}] (порядок точності О(h^{self.order}))')
 
 
 class RectangleIntegrator(BaseIntegrator):
