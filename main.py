@@ -39,8 +39,8 @@ def main():
                 while n <= min_n:
                     file.write(f'n = {n} -> I = {i.integrate(n):.6f}\n')
                     n *= 2
-                file.write(f'Уточнений результат: {i_refined:.6f} (n_min = {min_n}, похибка = {e:.6f})\n\n')
-                print(f'Уточнений результат: {i_refined:.6f} (n_min = {min_n}, похибка = {e:.6f})\n')
+                file.write(f'Уточнений результат: {i_refined:.6f} (n_min = {min_n}, похибка = {delta:.6f})\n\n')
+                print(f'Уточнений результат: {i_refined:.6f} (n_min = {min_n}, похибка = {delta:.6f})\n')
             file.write('='*60+'\n')
             print('='*60)
 
