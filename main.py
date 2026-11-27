@@ -16,7 +16,7 @@ def target_function(x):
 
 def main():
     """Точка входу програми."""
-    params = {'a': 0.0, 'b': 1.0}
+    params = {'a': 0.0, 'b': 1.0, 'limit_iter': 6}
     eps = 0.5e-4
 
     integrators = [RectangleIntegrator.from_dict(target_function, params),
@@ -33,18 +33,22 @@ def main():
             for i in integrators:
                 file.write(f'{i}\n')
                 print(i)
-                i_refined, min_n, delta = i.adaptive_integrate(e)
+                i_refined, min_n, delta, hit_limit = i.adaptive_integrate(e)
 
-                n = 2
-                while n <= min_n:
-                    file.write(f'n = {n} -> I = {i.integrate(n):.6f}\n')
-                    n *= 2
-                file.write(f'Уточнений результат: {i_refined:.6f} (n_min = {min_n}, похибка = {delta:.6f})\n\n')
-                print(f'Уточнений результат: {i_refined:.6f} (n_min = {min_n}, похибка = {delta:.6f})\n')
+                if hit_limit:
+                    print('Iteration limit reached. Calculations stopped.\n')
+                    file.write('Iteration limit reached. Calculations stopped.\n')
+                else:
+                    n = 2
+                    while n <= min_n:
+                        file.write(f'n = {n} -> I = {i.integrate(n):.6f}\n')
+                        n *= 2
+                    file.write(f'Refined result: {i_refined:.6f} (n_min = {min_n}, error = {delta:.6f})\n\n')
+                    print(f'Refined result: {i_refined:.6f} (n_min = {min_n}, error = {delta:.6f})\n')
             file.write('='*60+'\n')
             print('='*60)
 
-    print('Протокол ітерацій збережено та записано у файл results.txt')
+    print('Iteration protocol saved to file results.txt')
 
 
 if __name__ == "__main__":
